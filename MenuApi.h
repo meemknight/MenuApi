@@ -21,6 +21,7 @@ namespace ma
 		none = 0,
 		menuHolder,
 		textButton,
+		function,
 	};
 
 	class ButtonAccesseble
@@ -55,15 +56,18 @@ namespace ma
 		MenuElement() {};
 
 		virtual void draw(sf::RenderWindow *window) = 0;
-		virtual int checkInput() = 0;
+		virtual int checkInput(sf::RenderWindow *window) = 0;
 		virtual int getType() = 0;
 		virtual Point getSize() = 0;
 		virtual void setPositionX(int x) = 0;
 		virtual void setPositionY(int y) = 0;
-		Menu *context;
+		virtual int getPositionX() = 0;
+		virtual int getPositionY() = 0;
+		//Menu *context;
+		ButtonAccesseble *actionType;
 	};
 
-	class MenuHolder : public virtual ButtonAccesseble
+	class MenuHolder : public  ButtonAccesseble
 	{
 	protected:
 		std::vector<MenuElement*> elements;
@@ -81,14 +85,27 @@ namespace ma
 		friend Menu;
 	};
 
+	class Function : public  ButtonAccesseble
+	{
+	public:
+		Function() {};
+		Function(void(*functionPointer)()) :functionPointer(functionPointer) {};
+
+		void(*functionPointer)() = nullptr;
+
+		virtual int getType() override{ return type::function; };
+		virtual void execute() override;
+	};
+
 	class TextButton : public virtual MenuElement
 	{
 	protected:
 		sf::Font font;
 	public:
 		TextButton() {};
-		TextButton(sf::Texture *t, sf::Font f, const char* text = nullptr, int textSize = 24)
+		TextButton(sf::Texture *t, sf::Font f, ButtonAccesseble* action, const char* text = nullptr, int textSize = 24)			
 		{
+			actionType = action;
 			s.setTexture(*t);
 			font = f;
 			textContent.setCharacterSize(textSize);
@@ -102,12 +119,15 @@ namespace ma
 		sf::Sprite s;
 		sf::Text textContent;
 
-		
+
+
 		void draw(sf::RenderWindow *window) override;
-		int checkInput();
+		int checkInput(sf::RenderWindow *window);
 		int getType() { return type::textButton; }
 		Point getSize();
 		void setPositionX(int x);
 		void setPositionY(int y);
+		virtual int getPositionX();
+		virtual int getPositionY();
 	};
 }

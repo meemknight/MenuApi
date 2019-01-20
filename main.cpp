@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "MenuApi.h"
+#include <iostream>
 
 int main()
 {
@@ -17,12 +18,18 @@ int main()
 	ma::MenuHolder mh;
 	mh.menu = &m;
 
+	ma::MenuHolder menu2;
+	menu2.menu = &m;
+	menu2.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {}), "a"));
+	menu2.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {}), "b"));
 
-	mh.appendElement(new ma::TextButton(&texture, font, "a"));
-	mh.appendElement(new ma::TextButton(&texture, font, "test"));
-	mh.appendElement(new ma::TextButton(&texture, font, "b"));
-	mh.appendElement(new ma::TextButton(&texture, font, "c"));
-	mh.appendElement(new ma::TextButton(&texture, font, "asta e lung"));
+
+
+	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "a"));
+	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "test"));
+	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "b"));
+	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "asta e gen un text f f lung si mare", 30));
+	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "lol\n"; }), "asta e lung"));
 
 	m.mainMenu = &mh;
 

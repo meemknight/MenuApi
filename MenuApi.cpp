@@ -1,26 +1,45 @@
 #include "MenuApi.h"
 
+
 namespace ma
 {
 	void Menu::update()
 	{
 		MenuHolder *holder;
-
-		//if (stack.size() != 0)
-		//{
-		//
-		//}else
-		//{
-		//	holder = mainMenu;
-		//}
-
 		holder = mainMenu;
 
-
-		for(auto i: holder->elements)
+		if (stack.size() != 0)
 		{
-			i->draw(window);
-		
+			for(int i=0; i<stack.size(); i++)
+			{
+				if(holder->elements[stack[i]]->actionType->getType() == type::menuHolder)
+				{
+					holder = (MenuHolder*)holder->elements[stack[i]]->actionType;
+				}else
+				{
+					
+				}
+			}
+
+	
+
+		}
+
+
+		int input = -1;
+		for(int i = holder->elements.size()-1; i>=0; i--)
+		{
+			holder->elements[i]->draw(window);
+			int temp = holder->elements[i]->checkInput(window);
+			if(temp != -1)
+			{
+				input = i;
+			}
+		}
+
+		if(input != -1)
+		{
+			stack.push_back(input);
 		}
 
 	}
@@ -52,7 +71,7 @@ namespace ma
 		}
 
 		int pos = 0;
-		for(int i = elements.size()-1; i >= 0; i--)
+		for(int i = 0; i < elements.size(); i++)
 		{
 			pos += padding;
 			elements[i]->setPositionY(pos);
@@ -67,13 +86,41 @@ namespace ma
 	{
 		window->draw(s);
 		textContent.setPosition(s.getPosition());
+		auto startingPos = s.getPosition();
+		int spareX = getSize().x;	
+		int spareY = getSize().y;
+
+		spareY -= textContent.getCharacterSize();
+		spareY /= 2;
+		startingPos.y += spareY;
+
+		spareX -= textContent.getCharacterSize() * textContent.getString().getSize() / 2;
+		spareX /= 2;
+		startingPos.x += spareX;
+
+		textContent.setPosition(startingPos);
 		window->draw(textContent);
 
 	}
 
-	int TextButton::checkInput()
+	int TextButton::checkInput(sf::RenderWindow *window)
 	{
-		return 0;
+		if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			sf::IntRect rect(getPositionX(), getPositionY(), getSize().x, getSize().y);
+			if(rect.contains(sf::Mouse::getPosition(*window)))
+			{
+				if(actionType->getType() == type::function)
+				{
+					actionType->execute();
+				}else if(actionType->getType() == type::menuHolder)				
+				{
+					return 1;
+				}
+			}
+		}
+
+		return -1;
 	}
 
 	Point TextButton::getSize()
@@ -92,6 +139,24 @@ namespace ma
 		s.setPosition({ (float)s.getPosition().x, (float)y });
 	}
 
+	int TextButton::getPositionX()
+	{
+		return s.getPosition().x;
+	}
+
+	int TextButton::getPositionY()
+	{
+		return s.getPosition().y;
+	}
+
+
+	void Function::execute()
+	{
+		if(functionPointer!=nullptr)
+		{
+			functionPointer();
+		}
+	}
 
 }
 
