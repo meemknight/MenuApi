@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <utility>
 
 namespace ma
 {
@@ -23,6 +24,7 @@ namespace ma
 		textButton,
 		function,
 		iconButton,
+		buttonGroup
 	};
 
 	class ButtonAccesseble
@@ -168,6 +170,30 @@ namespace ma
 	
 	};
 
+	class ButtonGroup : public virtual MenuElement
+	{
+	protected:
+
+		//the second element from the pair is just an offset from the first one
+		std::vector<std::pair<MenuElement*, int>> elements;
+	public:
+		ButtonGroup() {};
+		ButtonGroup(Menu *menu):menu(menu) {};
+		
+		void appendElement(MenuElement *element);
+		void updateElementsPosition();
+
+		Menu *menu;
+
+		virtual void draw(sf::RenderWindow *window) override;
+		virtual int getType() override { return type::buttonGroup; }
+		virtual Point getSize() override;
+		virtual void setPositionX(int x) override;
+		virtual void setPositionY(int y) override;
+		virtual int getPositionX() override;
+		virtual int getPositionY() override;
+		virtual int checkInput(sf::RenderWindow *window, bool mouseReleased) override;
+	};
 
 
 

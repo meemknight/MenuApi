@@ -265,5 +265,137 @@ namespace ma
 	}
 #pragma endregion
 
+#pragma region ButtonGroup
+
+	void ButtonGroup::appendElement(MenuElement * element)
+	{
+		elements.push_back({ element, 0});
+		updateElementsPosition();
+	}
+
+	void ButtonGroup::updateElementsPosition()
+	{
+		int spareSpace = menu->window->getSize().x;
+
+		for(auto &i: elements)
+		{
+			spareSpace -= i.first->getSize().x;
+		}
+
+		int gaps = elements.size() - 1;
+		if (gaps <= 0) { gaps = 1; }
+		spareSpace /= gaps * 2;
+
+		elements[0].second = 0;
+		int currentPos = elements[0].first->getSize().x + spareSpace;
+		for(int i=1; i<elements.size(); i++)
+		{
+			elements[i].second = currentPos;
+			currentPos += elements[i].first->getSize().x;
+			currentPos += spareSpace;
+		}
+
+	}
+
+	void ButtonGroup::draw(sf::RenderWindow * window)
+	{
+		for (auto &i : elements) //todo ???
+		{
+			i.first->draw(window);
+		}
+	}
+
+	Point ButtonGroup::getSize()
+	{
+		Point size = { 0,0 };
+		for(auto &i: elements)
+		{
+			size.x += i.second;
+			if(i.first->getSize().y > size.y)
+			{
+				size.y = i.first->getSize().y;
+			}
+		}
+		return size;
+	}
+
+	void ButtonGroup::setPositionX(int x)
+	{
+		for (auto &i : elements) //todo ???
+		{
+			i.first->setPositionX(x + i.second);
+		}
+	}
+
+	void ButtonGroup::setPositionY(int y)
+	{
+		for (auto &i : elements)
+		{
+			i.first->setPositionY(y);
+		}
+	}
+
+	int ButtonGroup::getPositionX()
+	{
+		//todo make other checks like this
+		if(elements.size() == 0)
+		{
+			throw;
+		}
+
+		return elements[0].first->getPositionX();
+	}
+
+	int ButtonGroup::getPositionY()
+	{
+		//todo make other checks like this
+		if (elements.size() == 0)
+		{
+			throw;
+		}
+
+		return elements[0].first->getPositionY();
+	}
+
+	int ButtonGroup::checkInput(sf::RenderWindow * window, bool mouseReleased)
+	{
+		int valueReturned = 0;
+		if (mouseReleased)
+		{
+			for(int i=0; i<elements.size(); i++)
+			{
+				sf::IntRect rect(elements[i].first->getPositionX(), elements[i].first->getPositionY(), elements[i].first->getSize().x, elements[i].first->getSize().y);
+				if (rect.contains(sf::Mouse::getPosition(*window)))
+				{
+					if (elements[i].first->actionType != nullptr)
+					{
+						if (elements[i].first->actionType->getType() == type::function)
+						{
+							elements[i].first->actionType->execute();
+							valueReturned = 2;
+						}
+						else if (elements[i].first->actionType->getType() == type::menuHolder)
+						{
+							//return 1;
+							valueReturned = 3;
+						}
+					}
+					else
+					{
+						if(valueReturned==0)
+						{
+							valueReturned = 3;
+						}
+					}
+				}
+			}
+			
+		}
+
+		return valueReturned;
+	}
+
+#pragma endregion
+
 }
 

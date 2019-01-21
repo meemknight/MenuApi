@@ -31,14 +31,19 @@ int main()
 	menu2.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "test\n"; }), "a"));
 	menu2.appendElement(new ma::TextButton(&texture, font, nullptr, "b"));
 
+	ma::ButtonGroup buttonGroup(&m);
+	buttonGroup.appendElement(new ma::TextButton(&smallButtonTexture, font, new ma::Function([] {}), "a"));
+	buttonGroup.appendElement(new ma::TextButton(&smallButtonTexture, font, new ma::Function([] {}), "a"));
+	buttonGroup.appendElement(new ma::IconButton(&smallButtonTexture, &arrowTexture, 0));
 
-	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "a"));
-	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "test"));
-	mh.appendElement(new ma::TextButton(&texture, font, 0, "a"));
+	//mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "a"));
+	//mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "test"));
 	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "asta e gen un text f f lung si mare", 30));
 	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "lol\n"; }), "asta e lung"));
-
+	mh.appendElement(&buttonGroup);
 	m.mainMenu = &mh;
+	mh.appendElement(new ma::TextButton(&texture, font, 0, "a"));
+
 
 	bool mouseButtonPressed = 0;
 	while (window.isOpen())
