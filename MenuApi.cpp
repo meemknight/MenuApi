@@ -3,6 +3,36 @@
 
 namespace ma
 {
+
+#pragma region MenuElement
+	int MenuElement::checkInput(sf::RenderWindow * window)
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			sf::IntRect rect(getPositionX(), getPositionY(), getSize().x, getSize().y);
+			if (rect.contains(sf::Mouse::getPosition(*window)))
+			{
+				if (actionType != nullptr)
+				{
+					if (actionType->getType() == type::function)
+					{
+						actionType->execute();
+					}
+					else if (actionType->getType() == type::menuHolder)
+					{
+						return 1;
+					}
+				}
+			}
+		}
+
+		return -1;
+	}
+
+#pragma endregion
+
+#pragma region MenuHolder
+
 	void Menu::update()
 	{
 		MenuHolder *holder;
@@ -80,7 +110,9 @@ namespace ma
 		}
 
 	}
+#pragma endregion
 
+#pragma region TextButton
 
 	void TextButton::draw(sf::RenderWindow *window)
 	{
@@ -101,26 +133,6 @@ namespace ma
 		textContent.setPosition(startingPos);
 		window->draw(textContent);
 
-	}
-
-	int TextButton::checkInput(sf::RenderWindow *window)
-	{
-		if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		{
-			sf::IntRect rect(getPositionX(), getPositionY(), getSize().x, getSize().y);
-			if(rect.contains(sf::Mouse::getPosition(*window)))
-			{
-				if(actionType->getType() == type::function)
-				{
-					actionType->execute();
-				}else if(actionType->getType() == type::menuHolder)				
-				{
-					return 1;
-				}
-			}
-		}
-
-		return -1;
 	}
 
 	Point TextButton::getSize()
@@ -148,15 +160,61 @@ namespace ma
 	{
 		return s.getPosition().y;
 	}
+#pragma endregion
 
-
+#pragma region Function
 	void Function::execute()
 	{
-		if(functionPointer!=nullptr)
+		if (functionPointer != nullptr)
 		{
 			functionPointer();
 		}
 	}
+#pragma endregion
+
+#pragma region IconButton
+
+	void IconButton::draw(sf::RenderWindow * window)
+	{
+		window->draw(backgroundSprite);
+		window->draw(foregroundSprite);
+	}
+
+
+	Point IconButton::getSize()
+	{
+		auto sizeF = foregroundSprite.getTexture()->getSize();
+		auto sizeB = backgroundSprite.getTexture()->getSize();
+		
+		if (sizeB.x > sizeF.x) { sizeF.x = sizeB.x; }
+		if (sizeB.y > sizeF.y) { sizeF.y = sizeB.y; }
+
+		return Point({ (int)sizeF.x, (int)sizeF.y });
+	}
+
+	void IconButton::setPositionX(int x)
+	{
+		backgroundSprite.setPosition({ (float)x, (float)backgroundSprite.getPosition().y });
+		foregroundSprite.setPosition({ (float)x, (float)foregroundSprite.getPosition().y });
+	}
+
+	void IconButton::setPositionY(int y)
+	{
+		backgroundSprite.setPosition({ (float)backgroundSprite.getPosition().x, (float)y });
+		foregroundSprite.setPosition({ (float)foregroundSprite.getPosition().x, (float)y });
+	}
+
+	int IconButton::getPositionX()
+	{
+		//todo ?
+		return backgroundSprite.getPosition().x;
+	}
+
+	int IconButton::getPositionY()
+	{
+		return backgroundSprite.getPosition().y;
+	}
+#pragma endregion
 
 }
 

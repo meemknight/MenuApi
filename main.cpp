@@ -9,6 +9,13 @@ int main()
 	shape.setFillColor(sf::Color::Green);
 	sf::Texture texture;
 	texture.loadFromFile("button.png");
+
+	sf::Texture smallButtonTexture;
+	smallButtonTexture.loadFromFile("smallButton.jpg");
+
+	sf::Texture arrowTexture;
+	arrowTexture.loadFromFile("backButton.png");
+
 	sf::Font font;
 	font.loadFromFile("font.ttf");
 
@@ -27,7 +34,7 @@ int main()
 
 	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "a"));
 	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "test"));
-	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "b"));
+	mh.appendElement(new ma::IconButton(&smallButtonTexture, &arrowTexture , new ma::Function([] {std::cout << ":) "; })));
 	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "asta e gen un text f f lung si mare", 30));
 	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "lol\n"; }), "asta e lung"));
 

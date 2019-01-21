@@ -40,7 +40,7 @@ namespace ma
 
 		std::vector<int> stack;
 		MenuHolder *mainMenu;
-
+		MenuElement *backButton;
 
 		sf::RenderWindow *window;
 
@@ -56,7 +56,7 @@ namespace ma
 		MenuElement() {};
 
 		virtual void draw(sf::RenderWindow *window) = 0;
-		virtual int checkInput(sf::RenderWindow *window) = 0;
+		virtual int checkInput(sf::RenderWindow *window);
 		virtual int getType() = 0;
 		virtual Point getSize() = 0;
 		virtual void setPositionX(int x) = 0;
@@ -64,7 +64,7 @@ namespace ma
 		virtual int getPositionX() = 0;
 		virtual int getPositionY() = 0;
 		//Menu *context;
-		ButtonAccesseble *actionType;
+		ButtonAccesseble *actionType = 0;
 	};
 
 	class MenuHolder : public  ButtonAccesseble
@@ -97,6 +97,7 @@ namespace ma
 		virtual void execute() override;
 	};
 
+	//this is a button with some text in it
 	class TextButton : public virtual MenuElement
 	{
 	protected:
@@ -120,14 +121,41 @@ namespace ma
 		sf::Text textContent;
 
 
-
-		void draw(sf::RenderWindow *window) override;
-		int checkInput(sf::RenderWindow *window);
-		int getType() { return type::textButton; }
-		Point getSize();
-		void setPositionX(int x);
-		void setPositionY(int y);
-		virtual int getPositionX();
-		virtual int getPositionY();
+		virtual void draw(sf::RenderWindow *window) override;
+		virtual int getType() override { return type::textButton; }
+		virtual Point getSize() override;
+		virtual void setPositionX(int x) override;
+		virtual void setPositionY(int y) override;
+		virtual int getPositionX() override;
+		virtual int getPositionY() override;
 	};
+
+	class IconButton : public virtual MenuElement
+	{
+	public:
+		IconButton() {};
+		IconButton(sf::Texture *background, sf::Texture *foreground, ButtonAccesseble* action)
+		{
+			actionType = action;
+			backgroundSprite.setTexture(*background);
+			foregroundSprite.setTexture(*foreground);
+		}
+
+		sf::Sprite backgroundSprite;
+		sf::Sprite foregroundSprite;
+
+
+		virtual void draw(sf::RenderWindow *window) override;
+		virtual int getType() override { return type::textButton; }
+		virtual Point getSize() override;
+		virtual void setPositionX(int x) override;
+		virtual void setPositionY(int y) override;
+		virtual int getPositionX() override;
+		virtual int getPositionY() override;
+	
+	};
+
+
+
+
 }
