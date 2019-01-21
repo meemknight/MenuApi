@@ -21,6 +21,7 @@ int main()
 
 	ma::Menu m;
 	m.window = &window;
+	m.backButton = new ma::IconButton(0, &arrowTexture, new ma::Function([] {std::cout << "back :0 "; }));
 
 	ma::MenuHolder mh;
 	mh.menu = &m;
@@ -34,7 +35,7 @@ int main()
 
 	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "a"));
 	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "test"));
-	mh.appendElement(new ma::IconButton(&smallButtonTexture, &arrowTexture , new ma::Function([] {std::cout << ":) "; })));
+	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {}), "a"));
 	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "asta e gen un text f f lung si mare", 30));
 	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "lol\n"; }), "asta e lung"));
 

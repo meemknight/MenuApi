@@ -22,6 +22,7 @@ namespace ma
 		menuHolder,
 		textButton,
 		function,
+		iconButton,
 	};
 
 	class ButtonAccesseble
@@ -44,7 +45,7 @@ namespace ma
 
 		sf::RenderWindow *window;
 
-		void update();
+		int update();
 
 	};
 
@@ -107,7 +108,11 @@ namespace ma
 		TextButton(sf::Texture *t, sf::Font f, ButtonAccesseble* action, const char* text = nullptr, int textSize = 24)			
 		{
 			actionType = action;
-			s.setTexture(*t);
+			if( t!= nullptr)
+			{
+				s.setTexture(*t);
+			}
+
 			font = f;
 			textContent.setCharacterSize(textSize);
 			textContent.setFont(font);
@@ -137,8 +142,16 @@ namespace ma
 		IconButton(sf::Texture *background, sf::Texture *foreground, ButtonAccesseble* action)
 		{
 			actionType = action;
-			backgroundSprite.setTexture(*background);
-			foregroundSprite.setTexture(*foreground);
+			
+			if (background != nullptr)
+			{
+				backgroundSprite.setTexture(*background);
+			}
+
+			if(foreground != nullptr)
+			{
+				foregroundSprite.setTexture(*foreground);
+			}
 		}
 
 		sf::Sprite backgroundSprite;
@@ -146,7 +159,7 @@ namespace ma
 
 
 		virtual void draw(sf::RenderWindow *window) override;
-		virtual int getType() override { return type::textButton; }
+		virtual int getType() override { return type::iconButton; }
 		virtual Point getSize() override;
 		virtual void setPositionX(int x) override;
 		virtual void setPositionY(int y) override;

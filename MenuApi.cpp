@@ -5,11 +5,14 @@ namespace ma
 {
 
 #pragma region MenuElement
+	///check input should return 1 if a button was pressed and it was a menuHolder
+	/// 0 if nothing was pressed
+	/// 2 if a normal button was pressd
 	int MenuElement::checkInput(sf::RenderWindow * window)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			sf::IntRect rect(getPositionX(), getPositionY(), getSize().x, getSize().y);
+			sf::IntRect rect(getPositionX(), getPositionY(), getSize().x, getSize().y);	
 			if (rect.contains(sf::Mouse::getPosition(*window)))
 			{
 				if (actionType != nullptr)
@@ -17,6 +20,7 @@ namespace ma
 					if (actionType->getType() == type::function)
 					{
 						actionType->execute();
+						return 2;
 					}
 					else if (actionType->getType() == type::menuHolder)
 					{
@@ -26,55 +30,76 @@ namespace ma
 			}
 		}
 
-		return -1;
+		return 0;
 	}
 
 #pragma endregion
 
-#pragma region MenuHolder
-
-	void Menu::update()
+	int Menu::update()
 	{
 		MenuHolder *holder;
 		holder = mainMenu;
 
 		if (stack.size() != 0)
 		{
-			for(int i=0; i<stack.size(); i++)
+			for (int i = 0; i < stack.size(); i++)
 			{
-				if(holder->elements[stack[i]]->actionType->getType() == type::menuHolder)
+				if (holder->elements[stack[i]]->actionType->getType() == type::menuHolder)
 				{
 					holder = (MenuHolder*)holder->elements[stack[i]]->actionType;
-				}else
+				}
+				else
 				{
-					
+
 				}
 			}
 
-	
+
 
 		}
 
 
 		int input = -1;
-		for(int i = holder->elements.size()-1; i>=0; i--)
+		for (int i = holder->elements.size() - 1; i >= 0; i--)
 		{
 			holder->elements[i]->draw(window);
 			int temp = holder->elements[i]->checkInput(window);
-			if(temp != -1)
+			if (temp == 1)
 			{
 				input = i;
 			}
 		}
 
-		if(input != -1)
+		if (input != -1)
 		{
 			stack.push_back(input);
 		}
 
+		if(backButton != nullptr)
+		{
+			backButton->setPositionX(100);
+			backButton->setPositionY(100);
+			backButton->draw(window);
+			if(backButton->checkInput(window) > 0)
+			{
+				if(stack.size()==0)
+				{
+					return 0;
+				}
+
+				stack.pop_back();
+			}
+
+		}
+
+		return 1;
 	}
 
 
+
+#pragma region MenuHolder
+
+	
 
 	void MenuHolder::appendElement(MenuElement * e)
 	{
@@ -137,6 +162,10 @@ namespace ma
 
 	Point TextButton::getSize()
 	{
+		if(s.getTexture() == nullptr)
+		{
+			return { 0,0 };
+		}
 		auto size = s.getTexture()->getSize();
 		return Point({(int)size.x, (int)size.y});
 	}
@@ -183,8 +212,26 @@ namespace ma
 
 	Point IconButton::getSize()
 	{
-		auto sizeF = foregroundSprite.getTexture()->getSize();
-		auto sizeB = backgroundSprite.getTexture()->getSize();
+		auto sizeF = sf::Vector2u();
+		if(foregroundSprite.getTexture() == nullptr)
+		{
+			sizeF = { 0,0 };
+		}else
+		{
+			sizeF = foregroundSprite.getTexture()->getSize();
+		}
+
+		auto sizeB = sf::Vector2u();
+		if (backgroundSprite.getTexture() == nullptr)
+		{
+			sizeB = { 0,0 };
+		}
+		else
+		{
+			sizeB = backgroundSprite.getTexture()->getSize();
+		}
+		
+	
 		
 		if (sizeB.x > sizeF.x) { sizeF.x = sizeB.x; }
 		if (sizeB.y > sizeF.y) { sizeF.y = sizeB.y; }
