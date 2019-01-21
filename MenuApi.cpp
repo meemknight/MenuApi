@@ -8,9 +8,10 @@ namespace ma
 	///check input should return 1 if a button was pressed and it was a menuHolder
 	/// 0 if nothing was pressed
 	/// 2 if a normal button was pressd
-	int MenuElement::checkInput(sf::RenderWindow * window)
+	/// 3 if the button was just pressed
+	int MenuElement::checkInput(sf::RenderWindow * window, bool mouseReleased)
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (mouseReleased)
 		{
 			sf::IntRect rect(getPositionX(), getPositionY(), getSize().x, getSize().y);	
 			if (rect.contains(sf::Mouse::getPosition(*window)))
@@ -26,6 +27,9 @@ namespace ma
 					{
 						return 1;
 					}
+				}else
+				{
+					return 3;
 				}
 			}
 		}
@@ -35,7 +39,7 @@ namespace ma
 
 #pragma endregion
 
-	int Menu::update()
+	int Menu::update(bool mouseReleased)
 	{
 		MenuHolder *holder;
 		holder = mainMenu;
@@ -54,8 +58,6 @@ namespace ma
 				}
 			}
 
-
-
 		}
 
 
@@ -63,7 +65,7 @@ namespace ma
 		for (int i = holder->elements.size() - 1; i >= 0; i--)
 		{
 			holder->elements[i]->draw(window);
-			int temp = holder->elements[i]->checkInput(window);
+			int temp = holder->elements[i]->checkInput(window, mouseReleased);
 			if (temp == 1)
 			{
 				input = i;
@@ -80,7 +82,7 @@ namespace ma
 			backButton->setPositionX(100);
 			backButton->setPositionY(100);
 			backButton->draw(window);
-			if(backButton->checkInput(window) > 0)
+			if(backButton->checkInput(window, mouseReleased) > 0)
 			{
 				if(stack.size()==0)
 				{

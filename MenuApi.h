@@ -45,7 +45,7 @@ namespace ma
 
 		sf::RenderWindow *window;
 
-		int update();
+		int update(bool mouseReleased);
 
 	};
 
@@ -57,7 +57,7 @@ namespace ma
 		MenuElement() {};
 
 		virtual void draw(sf::RenderWindow *window) = 0;
-		virtual int checkInput(sf::RenderWindow *window);
+		virtual int checkInput(sf::RenderWindow *window, bool mouseReleased);
 		virtual int getType() = 0;
 		virtual Point getSize() = 0;
 		virtual void setPositionX(int x) = 0;
