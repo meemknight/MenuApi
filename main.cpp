@@ -4,17 +4,20 @@
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1800, 800), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(1800, 900), "SFML works!");
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
 	sf::Texture texture;
 	texture.loadFromFile("button.png");
 
 	sf::Texture smallButtonTexture;
-	smallButtonTexture.loadFromFile("smallButton.jpg");
+	smallButtonTexture.loadFromFile("smallButton.png");
 
 	sf::Texture arrowTexture;
 	arrowTexture.loadFromFile("backButton.png");
+
+	sf::Texture textButton;
+	textButton.loadFromFile("textBUtton.png");
 
 	sf::Font font;
 	font.loadFromFile("font.ttf");
@@ -32,14 +35,15 @@ int main()
 	menu2.appendElement(new ma::TextButton(&texture, font, nullptr, "b"));
 
 	ma::ButtonGroup buttonGroup(&m);
-	buttonGroup.appendElement(new ma::TextButton(&smallButtonTexture, font, new ma::Function([] {}), "a"));
-	buttonGroup.appendElement(new ma::TextButton(&smallButtonTexture, font, new ma::Function([] {}), "a"));
+	buttonGroup.appendElement(new ma::TextButton(&smallButtonTexture, font, new ma::Function([] {}), "A", 30));
+	buttonGroup.appendElement(new ma::TextButton(&smallButtonTexture, font, new ma::Function([] {}), "B", 30));
 	buttonGroup.appendElement(new ma::IconButton(&smallButtonTexture, &arrowTexture, 0));
+	buttonGroup.appendElement(new ma::IconButton(&smallButtonTexture, 0, 0));
 
 	//mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "a"));
 	//mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "test"));
+	mh.appendElement(new ma::TextButton(&textButton, font, new ma::Function([] {std::cout << "lol\n"; }), "Menu API", 30));
 	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "asta e gen un text f f lung si mare", 30));
-	mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "lol\n"; }), "asta e lung"));
 	mh.appendElement(&buttonGroup);
 	m.mainMenu = &mh;
 	mh.appendElement(new ma::TextButton(&texture, font, 0, "a"));

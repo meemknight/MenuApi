@@ -284,17 +284,18 @@ namespace ma
 
 		int gaps = elements.size() - 1;
 		if (gaps <= 0) { gaps = 1; }
-		spareSpace /= gaps * 2;
+		spareSpace /= gaps * 4;
 
-		elements[0].second = 0;
-		int currentPos = elements[0].first->getSize().x + spareSpace;
+		elements[0].second = spareSpace;
+		int currentPos = elements[0].first->getSize().x + spareSpace * 2;
 		for(int i=1; i<elements.size(); i++)
 		{
 			elements[i].second = currentPos;
 			currentPos += elements[i].first->getSize().x;
 			currentPos += spareSpace;
-		}
 
+		}
+		
 	}
 
 	void ButtonGroup::draw(sf::RenderWindow * window)
@@ -310,12 +311,14 @@ namespace ma
 		Point size = { 0,0 };
 		for(auto &i: elements)
 		{
-			size.x += i.second;
+			//size.x += i.first->getSize().x;
 			if(i.first->getSize().y > size.y)
 			{
 				size.y = i.first->getSize().y;
 			}
 		}
+		int spareSpace = elements.begin()->second;
+		size.x = (elements.end() - 1)->second + (elements.end() - 1)->first->getSize().x + spareSpace;
 		return size;
 	}
 
