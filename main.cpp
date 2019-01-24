@@ -40,10 +40,10 @@ int main()
 
 	ma::MenuHolder menu3;
 	menu3.menu = &m;
-	menu3.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "test\n"; }), "a"));
-	menu3.appendElement(new ma::TextButton(&texture, font, nullptr, "b"));
+	menu3.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "a\n"; }), "a"));
+	menu3.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "b\n"; }), "b"));
 	menu3.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "c\n"; }), "c"));
-	menu3.appendElement(new ma::TextButton(&texture, font, nullptr, "d"));
+	menu3.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "d\n"; }), "d"));
 
 
 	ma::ButtonGroup buttonGroup(&m);
@@ -55,7 +55,7 @@ int main()
 	//mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "a"));
 	//mh.appendElement(new ma::TextButton(&texture, font, new ma::Function([]{}), "test"));
 	mh.appendElement(new ma::TextButton(&textButton, font, new ma::Function([] {std::cout << "lol\n"; }), "Menu API", 30));
-	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "asta e gen un text f f lung si mare", 34));
+	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "this is like a big text", 34));
 	mh.appendElement(&buttonGroup);
 	m.mainMenu = &mh;
 	mh.appendElement(new ma::TextButton(&texture, font, 0, "a"));
