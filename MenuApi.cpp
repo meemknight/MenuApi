@@ -5,10 +5,10 @@ namespace ma
 {
 
 #pragma region MenuElement
-	///check input should return 1 if a button was pressed and it was a menuHolder
-	/// 0 if nothing was pressed
-	/// 2 if a normal button was pressd
-	/// 3 if the button was just pressed
+	/// -2 if nothing was pressed
+	/// -1 if a normal butoon was pressed
+	/// 0, 1, 3, ... if a button that leads to a menu was pressed
+
 	int MenuElement::checkInput(sf::RenderWindow * window, bool mouseReleased)
 	{
 		if (mouseReleased)
@@ -21,20 +21,20 @@ namespace ma
 					if (actionType->getType() == type::function)
 					{
 						actionType->execute();
-						return 2;
+						return -1;
 					}
 					else if (actionType->getType() == type::menuHolder)
 					{
-						return 1;
+						return 0;
 					}
 				}else
 				{
-					return 3;
+					return -1;
 				}
 			}
 		}
 
-		return 0;
+		return -2;
 	}
 
 #pragma endregion
@@ -48,41 +48,62 @@ namespace ma
 		{
 			for (int i = 0; i < stack.size(); i++)
 			{
-				if (holder->elements[stack[i]]->actionType->getType() == type::menuHolder)
-				{
-					holder = (MenuHolder*)holder->elements[stack[i]]->actionType;
-				}
-				else
-				{
+					
 
+				if (holder->elements[stack[i].first]->actionType != nullptr && holder->elements[stack[i].first]->actionType->getType() == type::menuHolder)
+				{
+					holder = (MenuHolder*)holder->elements[stack[i].first]->actionType;
+				}else
+				if (holder->elements[stack[i].first]->getType() == type::buttonGroup)
+				{
+					auto temp = ((ButtonGroup*)holder->elements[stack[i].first])->buttons[stack[i].second].first;
+					if(temp->actionType->getType() == type::menuHolder)
+					{
+						holder = (MenuHolder*)temp->actionType;
+					}
 				}
 			}
 
 		}
 
+		//todo: make the background properly
+		if(background.getTexture() != nullptr)
+		{
+			int sparex = window->getSize().x - background.getTexture()->getSize().x;
+			int sparey = window->getSize().y - background.getTexture()->getSize().y;
+			sparex /= 2;
+			sparey /= 2;
+			background.setPosition(sparex, sparey);
+			window->draw(background);
+		}
+
+
 
 		int input = -1;
+		int secondary = 0;
 		for (int i = holder->elements.size() - 1; i >= 0; i--)
 		{
 			holder->elements[i]->draw(window);
 			int temp = holder->elements[i]->checkInput(window, mouseReleased);
-			if (temp == 1)
+			if (temp >= 0)
 			{
 				input = i;
+				secondary = temp;
 			}
 		}
 
 		if (input != -1)
 		{
-			stack.push_back(input);
+			stack.push_back({ input , secondary});
 		}
 
 		if(backButton != nullptr)
 		{
-			backButton->setPositionX(100);
+			//todo make it set it's position
+			backButton->setPositionX(200);
 			backButton->setPositionY(100);
 			backButton->draw(window);
-			if(backButton->checkInput(window, mouseReleased) > 0)
+			if(backButton->checkInput(window, mouseReleased) != -2)
 			{
 				if(stack.size()==0)
 				{
@@ -96,7 +117,6 @@ namespace ma
 
 		return 1;
 	}
-
 
 
 #pragma region MenuHolder
@@ -269,7 +289,7 @@ namespace ma
 
 	void ButtonGroup::appendElement(MenuElement * element)
 	{
-		elements.push_back({ element, 0});
+		buttons.push_back({ element, 0});
 		updateElementsPosition();
 	}
 
@@ -277,21 +297,21 @@ namespace ma
 	{
 		int spareSpace = menu->window->getSize().x;
 
-		for(auto &i: elements)
+		for(auto &i: buttons)
 		{
 			spareSpace -= i.first->getSize().x;
 		}
 
-		int gaps = elements.size() - 1;
+		int gaps = buttons.size() - 1;
 		if (gaps <= 0) { gaps = 1; }
 		spareSpace /= gaps * 4;
 
-		elements[0].second = spareSpace;
-		int currentPos = elements[0].first->getSize().x + spareSpace * 2;
-		for(int i=1; i<elements.size(); i++)
+		buttons[0].second = spareSpace;
+		int currentPos = buttons[0].first->getSize().x + spareSpace * 2;
+		for(int i=1; i< buttons.size(); i++)
 		{
-			elements[i].second = currentPos;
-			currentPos += elements[i].first->getSize().x;
+			buttons[i].second = currentPos;
+			currentPos += buttons[i].first->getSize().x;
 			currentPos += spareSpace;
 
 		}
@@ -300,7 +320,7 @@ namespace ma
 
 	void ButtonGroup::draw(sf::RenderWindow * window)
 	{
-		for (auto &i : elements) //todo ???
+		for (auto &i : buttons) //todo ???
 		{
 			i.first->draw(window);
 		}
@@ -309,7 +329,7 @@ namespace ma
 	Point ButtonGroup::getSize()
 	{
 		Point size = { 0,0 };
-		for(auto &i: elements)
+		for(auto &i: buttons)
 		{
 			//size.x += i.first->getSize().x;
 			if(i.first->getSize().y > size.y)
@@ -317,14 +337,14 @@ namespace ma
 				size.y = i.first->getSize().y;
 			}
 		}
-		int spareSpace = elements.begin()->second;
-		size.x = (elements.end() - 1)->second + (elements.end() - 1)->first->getSize().x + spareSpace;
+		int spareSpace = buttons.begin()->second;
+		size.x = (buttons.end() - 1)->second + (buttons.end() - 1)->first->getSize().x + spareSpace;
 		return size;
 	}
 
 	void ButtonGroup::setPositionX(int x)
 	{
-		for (auto &i : elements) //todo ???
+		for (auto &i : buttons) //todo ???
 		{
 			i.first->setPositionX(x + i.second);
 		}
@@ -332,7 +352,7 @@ namespace ma
 
 	void ButtonGroup::setPositionY(int y)
 	{
-		for (auto &i : elements)
+		for (auto &i : buttons)
 		{
 			i.first->setPositionY(y);
 		}
@@ -341,55 +361,52 @@ namespace ma
 	int ButtonGroup::getPositionX()
 	{
 		//todo make other checks like this
-		if(elements.size() == 0)
+		if(buttons.size() == 0)
 		{
 			throw;
 		}
 
-		return elements[0].first->getPositionX();
+		return buttons[0].first->getPositionX();
 	}
 
 	int ButtonGroup::getPositionY()
 	{
 		//todo make other checks like this
-		if (elements.size() == 0)
+		if (buttons.size() == 0)
 		{
 			throw;
 		}
 
-		return elements[0].first->getPositionY();
+		return buttons[0].first->getPositionY();
 	}
 
 	int ButtonGroup::checkInput(sf::RenderWindow * window, bool mouseReleased)
 	{
-		int valueReturned = 0;
+		int valueReturned = -2;
 		if (mouseReleased)
 		{
-			for(int i=0; i<elements.size(); i++)
+			for(int i=0; i< buttons.size(); i++)
 			{
-				sf::IntRect rect(elements[i].first->getPositionX(), elements[i].first->getPositionY(), elements[i].first->getSize().x, elements[i].first->getSize().y);
+				sf::IntRect rect(buttons[i].first->getPositionX(), buttons[i].first->getPositionY(), buttons[i].first->getSize().x, buttons[i].first->getSize().y);
 				if (rect.contains(sf::Mouse::getPosition(*window)))
 				{
-					if (elements[i].first->actionType != nullptr)
+					if (buttons[i].first->actionType != nullptr)
 					{
-						if (elements[i].first->actionType->getType() == type::function)
+						if (buttons[i].first->actionType->getType() == type::function)
 						{
-							elements[i].first->actionType->execute();
-							valueReturned = 2;
+							buttons[i].first->actionType->execute();
+							if(valueReturned < 0)
+							{
+								valueReturned = -1;
+							}
 						}
-						else if (elements[i].first->actionType->getType() == type::menuHolder)
+						else if (buttons[i].first->actionType->getType() == type::menuHolder)
 						{
 							//return 1;
-							valueReturned = 3;
+							valueReturned = i;
 						}
 					}
-					else
-					{
-						if(valueReturned==0)
-						{
-							valueReturned = 3;
-						}
-					}
+
 				}
 			}
 			

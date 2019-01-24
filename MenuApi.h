@@ -41,11 +41,13 @@ namespace ma
 	public:
 		Menu() {}
 
-		std::vector<int> stack;
+		//the first element of the pair is the index in menu, the second is the index in the subGroup
+		std::vector<std::pair<int, int>> stack;
 		MenuHolder *mainMenu;
 		MenuElement *backButton;
 
 		sf::RenderWindow *window;
+		sf::Sprite background;
 
 		int update(bool mouseReleased);
 
@@ -107,7 +109,7 @@ namespace ma
 		sf::Font font;
 	public:
 		TextButton() {};
-		TextButton(sf::Texture *t, sf::Font f, ButtonAccesseble* action, const char* text = nullptr, int textSize = 24, sf::Color color = sf::Color::Black)			
+		TextButton(sf::Texture *t, sf::Font f, ButtonAccesseble* action, const char* text = nullptr, int textSize = 30, sf::Color color = sf::Color::Black)			
 		{
 			actionType = action;
 			if( t!= nullptr)
@@ -171,12 +173,12 @@ namespace ma
 	
 	};
 
-	class ButtonGroup : public virtual MenuElement
+	class ButtonGroup : public MenuElement
 	{
 	protected:
 
 		//the second element from the pair is just an offset from the first one
-		std::vector<std::pair<MenuElement*, int>> elements;
+		std::vector<std::pair<MenuElement*, int>> buttons;
 	public:
 		ButtonGroup() {};
 		ButtonGroup(Menu *menu):menu(menu) {};
@@ -194,6 +196,8 @@ namespace ma
 		virtual int getPositionX() override;
 		virtual int getPositionY() override;
 		virtual int checkInput(sf::RenderWindow *window, bool mouseReleased) override;
+	
+		friend Menu;
 	};
 
 
