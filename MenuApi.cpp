@@ -169,11 +169,11 @@ namespace ma
 		int spareX = getSize().x;	
 		int spareY = getSize().y;
 
-		spareY -= textContent.getCharacterSize();
+		spareY -= textContent.getLocalBounds().height;
 		spareY /= 2;
 		startingPos.y += spareY;
-
-		spareX -= textContent.getCharacterSize() * textContent.getString().getSize() / 2;
+		
+		spareX -= textContent.getLocalBounds().width ;
 		spareX /= 2;
 		startingPos.x += spareX;
 

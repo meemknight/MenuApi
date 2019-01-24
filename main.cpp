@@ -4,7 +4,7 @@
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1800, 900), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(1800, 900), "Menu api");
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
 	sf::Texture texture;
@@ -31,14 +31,17 @@ int main()
 	m.background.setTexture(background);
 
 	ma::MenuHolder mh;
+	ma::MenuHolder menu3;
+
 	mh.menu = &m;
 
 	ma::MenuHolder menu2;
 	menu2.menu = &m;
 	menu2.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "test\n"; }), "a"));
-	menu2.appendElement(new ma::TextButton(&texture, font, nullptr, "b"));
+	menu2.appendElement(new ma::TextButton(&texture, font, nullptr, "b long text................................................"));
+	menu2.appendElement(new ma::TextButton(&smallButtonTexture, font, 0, ". . .", 30));
+	menu2.appendElement(new ma::TextButton(&smallButtonTexture, font, &menu3, ". . . ........", 30));
 
-	ma::MenuHolder menu3;
 	menu3.menu = &m;
 	menu3.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "a\n"; }), "a"));
 	menu3.appendElement(new ma::TextButton(&texture, font, new ma::Function([] {std::cout << "b\n"; }), "b"));
@@ -58,7 +61,7 @@ int main()
 	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "this is like a big text", 34));
 	mh.appendElement(&buttonGroup);
 	m.mainMenu = &mh;
-	mh.appendElement(new ma::TextButton(&texture, font, 0, "a"));
+	mh.appendElement(new ma::TextButton(&texture, font, 0, "b long text................................................"));
 
 
 	bool mouseButtonPressed = 0;
