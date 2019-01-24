@@ -67,10 +67,12 @@ namespace ma
 		}
 
 		//todo: make the background properly
+		int sparex = 0;
+		int sparey = 0;
 		if(background.getTexture() != nullptr)
 		{
-			int sparex = window->getSize().x - background.getTexture()->getSize().x;
-			int sparey = window->getSize().y - background.getTexture()->getSize().y;
+			sparex = window->getSize().x - background.getTexture()->getSize().x;
+			sparey = window->getSize().y - background.getTexture()->getSize().y;
 			sparex /= 2;
 			sparey /= 2;
 			background.setPosition(sparex, sparey);
@@ -100,8 +102,8 @@ namespace ma
 		if(backButton != nullptr)
 		{
 			//todo make it set it's position
-			backButton->setPositionX(200);
-			backButton->setPositionY(100);
+			backButton->setPositionX(sparex + 160);
+			backButton->setPositionY(sparey + 80);
 			backButton->draw(window);
 			if(backButton->checkInput(window, mouseReleased) != -2)
 			{
