@@ -1,3 +1,9 @@
+//////////////////////////////////////////////////////////////////
+//MenuApi.h
+//(c) Luta Vlad - 2019
+// this library is under MTI license, do not remove this notice
+//https://github.com/meemknight/MenuApi
+//////////////////////////////////////////////////////////////////
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -36,24 +42,26 @@ namespace ma
 		virtual void execute() = 0;
 	};
 
+	///bref this is the main menu class in where you will be storing your menu group.
+	///It needs to have a pointer to a MenuHolder in where you will put your buttons.
 	class Menu
 	{
 	public:
 		Menu() {}
+		Menu(sf::RenderWindow *window) :window(window){}
 
 		//the first element of the pair is the index in menu, the second is the index in the subGroup
 		std::vector<std::pair<int, int>> stack;
-		MenuHolder *mainMenu;
-		MenuElement *backButton;
+		MenuHolder *mainMenu = 0;
+		MenuElement *backButton = 0;
 
-		sf::RenderWindow *window;
+		sf::RenderWindow *window = 0;
 		sf::Sprite background;
 
-		int update(bool mouseReleased);
-
+		int update(bool mouseReleased, bool escapeReleased = 0);
+		void resetStack() { stack.clear(); }
 	};
 
-	
 
 	class MenuElement
 	{
@@ -72,12 +80,16 @@ namespace ma
 		ButtonAccesseble *actionType = 0;
 	};
 
+
+	///bref this class can hold other menu elements inside it.
+	///It must have a refference to it's Menu since it needs to know things like the size of
+	///the window.
 	class MenuHolder : public  ButtonAccesseble
 	{
 	protected:
 		std::vector<MenuElement*> elements;
 	public:
-		MenuHolder() {};
+		MenuHolder(Menu *menu = nullptr):menu(menu) {};
 		
 		Menu *menu;
 
@@ -90,6 +102,7 @@ namespace ma
 		friend Menu;
 	};
 
+	///bref this is a function that is accessed by a clicked button
 	class Function : public  ButtonAccesseble
 	{
 	public:
@@ -102,7 +115,7 @@ namespace ma
 		virtual void execute() override;
 	};
 
-	//this is a button with some text in it
+	///bref this is a button with some text in it
 	class TextButton : public virtual MenuElement
 	{
 	protected:
@@ -140,6 +153,7 @@ namespace ma
 		virtual int getPositionY() override;
 	};
 
+	///bref this is a button with a sprite in it
 	class IconButton : public virtual MenuElement
 	{
 	public:
@@ -173,6 +187,8 @@ namespace ma
 	
 	};
 
+	///bref this is an horizontal group of buttons.
+	///I reccomand using it with small buttons.
 	class ButtonGroup : public MenuElement
 	{
 	protected:

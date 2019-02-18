@@ -1,3 +1,9 @@
+//////////////////////////////////////////////////////////////////
+//MenuApi.cpp
+//(c) Luta Vlad - 2019
+// this library is under MTI license, do not remove this notice
+//https://github.com/meemknight/MenuApi
+//////////////////////////////////////////////////////////////////
 #include "MenuApi.h"
 
 
@@ -5,9 +11,9 @@ namespace ma
 {
 
 #pragma region MenuElement
-	/// -2 if nothing was pressed
-	/// -1 if a normal butoon was pressed
-	/// 0, 1, 3, ... if a button that leads to a menu was pressed
+	// -2 if nothing was pressed
+	// -1 if a normal butoon was pressed
+	// 0, 1, 3, ... if a button that leads to a menu was pressed
 
 	int MenuElement::checkInput(sf::RenderWindow * window, bool mouseReleased)
 	{
@@ -39,7 +45,7 @@ namespace ma
 
 #pragma endregion
 
-	int Menu::update(bool mouseReleased)
+	int Menu::update(bool mouseReleased, bool escapeReleased)
 	{
 		MenuHolder *holder;
 		holder = mainMenu;
@@ -66,7 +72,7 @@ namespace ma
 
 		}
 
-		//todo: make the background properly
+		
 		int sparex = 0;
 		int sparey = 0;
 		if(background.getTexture() != nullptr)
@@ -98,6 +104,16 @@ namespace ma
 		{
 			stack.push_back({ input , secondary});
 		}
+	
+		if(escapeReleased)
+		{
+			if (stack.size() == 0)
+			{
+				return 0;
+			}
+
+			stack.pop_back();
+		}
 
 		if(backButton != nullptr)
 		{
@@ -116,6 +132,8 @@ namespace ma
 			}
 
 		}
+
+
 
 		return 1;
 	}
@@ -333,7 +351,6 @@ namespace ma
 		Point size = { 0,0 };
 		for(auto &i: buttons)
 		{
-			//size.x += i.first->getSize().x;
 			if(i.first->getSize().y > size.y)
 			{
 				size.y = i.first->getSize().y;
@@ -346,7 +363,7 @@ namespace ma
 
 	void ButtonGroup::setPositionX(int x)
 	{
-		for (auto &i : buttons) //todo ???
+		for (auto &i : buttons)
 		{
 			i.first->setPositionX(x + i.second);
 		}
