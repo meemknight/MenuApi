@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////
 //MenuApi.cpp
 //(c) Luta Vlad - 2019
-// this library is under MTI license, do not remove this notice
+// this library is under MIT license, do not remove this notice
 //https://github.com/meemknight/MenuApi
 //////////////////////////////////////////////////////////////////
 #include "MenuApi.h"
