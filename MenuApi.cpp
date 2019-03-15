@@ -45,10 +45,38 @@ namespace ma
 
 #pragma endregion
 
+	void Menu::updateElementsPosition()
+	{
+		MenuHolder *holder;
+		holder = mainMenu;
+
+		holder->updateElementsPosition();
+	}
+
+	void Menu::updateBackgrounsPosition()
+	{
+		if (background.getTexture() != nullptr)
+		{
+			int sparex = window->getSize().x - background.getTexture()->getSize().x;
+			int sparey = window->getSize().y - background.getTexture()->getSize().y;
+			sparex /= 2;
+			sparey /= 2;
+			
+			backgroundPositionx = sparex;
+			backgroundPositiony = sparey;
+		}
+	}
+
 	int Menu::update(bool mouseReleased, bool escapeReleased)
 	{
 		MenuHolder *holder;
 		holder = mainMenu;
+
+		if(checkForResize)
+		{
+			updateElementsPosition();
+			updateBackgrounsPosition();
+		}
 
 		if (stack.size() != 0)
 		{
@@ -72,18 +100,12 @@ namespace ma
 
 		}
 
-		
-		int sparex = 0;
-		int sparey = 0;
 		if(background.getTexture() != nullptr)
 		{
-			sparex = window->getSize().x - background.getTexture()->getSize().x;
-			sparey = window->getSize().y - background.getTexture()->getSize().y;
-			sparex /= 2;
-			sparey /= 2;
-			background.setPosition(sparex, sparey);
+			background.setPosition(backgroundPositionx, backgroundPositiony);
 			window->draw(background);
 		}
+		
 
 
 
@@ -91,6 +113,7 @@ namespace ma
 		int secondary = 0;
 		for (int i = holder->elements.size() - 1; i >= 0; i--)
 		{
+
 			holder->elements[i]->draw(window);
 			int temp = holder->elements[i]->checkInput(window, mouseReleased);
 			if (temp >= 0)
@@ -118,8 +141,8 @@ namespace ma
 		if(backButton != nullptr)
 		{
 			//todo make it set it's position
-			backButton->setPositionX(sparex + 160);
-			backButton->setPositionY(sparey + 80);
+			backButton->setPositionX(backgroundPositionx + backButtonPaddingx);
+			backButton->setPositionY(backgroundPositiony + backButtonPaddingy);
 			backButton->draw(window);
 			if(backButton->checkInput(window, mouseReleased) != -2)
 			{

@@ -33,6 +33,9 @@ int main()
 	ma::Menu m(&window);
 	m.backButton = new ma::IconButton(0, &arrowTexture, 0);
 	m.background.setTexture(background);
+	m.updateBackgrounsPosition();
+
+	m.checkForResize = true;
 
 	ma::MenuHolder mh(&m);
 	ma::MenuHolder menu3(&m);
@@ -66,10 +69,13 @@ int main()
 	//If you do so and have problems try using Menu::resetStack() function
 	//which clears it's state.
 
+	auto size = window.getSize();
+
 	bool mouseButtonPressed = 0;
 	bool escapeButtonReleased = 0;
 	while (window.isOpen())
 	{
+
 		mouseButtonPressed = 0;
 		escapeButtonReleased = 0;
 		sf::Event event;
@@ -86,6 +92,10 @@ int main()
 			if (event.type == sf::Event::KeyReleased)
 			{
 				if (event.key.code == sf::Keyboard::Escape) { escapeButtonReleased = 1; }
+			}else
+			if(event.type == sf::Event::Resized)
+			{
+				 size = window.getSize();
 			}
 		}
 
@@ -96,6 +106,7 @@ int main()
 			window.close();
 		}
 		
+		window.setView(sf::View({ 0.f, 0.f, (float)size.x, (float)size.y }));
 		window.display();
 		window.clear();
 

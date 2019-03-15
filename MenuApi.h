@@ -55,8 +55,27 @@ namespace ma
 		MenuHolder *mainMenu = 0;
 		MenuElement *backButton = 0;
 
+		///i couldn't figure out how to set this programatically so i leave this up to your personal choice.
+		///this variables set the padding of the back button starting from the backgrouns position's left upper corner.
+		int backButtonPaddingx = 160;
+		int backButtonPaddingy = 80;
+
+
 		sf::RenderWindow *window = 0;
 		sf::Sprite background;
+
+		///i don't recommand changing this values by hand but if you want to do so, go for it
+		int backgroundPositionx = 0;
+		int backgroundPositiony = 0;
+
+		///this variable will determin if the api should or should not
+		///take into consideration the resize of the screen.
+		///if you do something like window.setView(sf::View({ 0.f, 0.f, (float)size.x, (float)size.y }));
+		///you might want to set this to true.
+		bool checkForResize = 0;
+
+		void updateElementsPosition();
+		void updateBackgrounsPosition();
 
 		int update(bool mouseReleased, bool escapeReleased = 0);
 		void resetStack() { stack.clear(); }
