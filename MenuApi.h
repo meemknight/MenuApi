@@ -30,7 +30,8 @@ namespace ma
 		textButton,
 		function,
 		iconButton,
-		buttonGroup
+		buttonGroup,
+		onOffButton,
 	};
 
 	class ButtonAccesseble
@@ -89,6 +90,8 @@ namespace ma
 
 		virtual void draw(sf::RenderWindow *window) = 0;
 		virtual int checkInput(sf::RenderWindow *window, bool mouseReleased);
+		///this function below will be called on click if the function above ^ is not overwritten
+		virtual void additionalFunctonality() {}
 		virtual int getType() = 0;
 		virtual Point getSize() = 0;
 		virtual void setPositionX(int x) = 0;
@@ -204,6 +207,47 @@ namespace ma
 		virtual int getPositionX() override;
 		virtual int getPositionY() override;
 	
+	};
+
+	class OnOffButton : public virtual MenuElement
+	{
+	public:
+		OnOffButton() {};
+		OnOffButton(sf::Texture *background, sf::Texture *onState, sf::Texture *offState, bool *data ,ButtonAccesseble* action = nullptr)
+		{
+			actionType = action;
+			this->data = data;
+			if (background != nullptr)
+			{
+				backgroundSprite.setTexture(*background);
+			}
+
+			if (onState != nullptr)
+			{
+				onStateSprite.setTexture(*onState);
+			}
+
+			if(offState != nullptr)
+			{
+				offStateSprite.setTexture(*offState);
+			}
+		}
+
+		sf::Sprite backgroundSprite;
+		sf::Sprite onStateSprite;
+		sf::Sprite offStateSprite;
+
+		bool *data;
+
+		virtual void draw(sf::RenderWindow *window) override;
+		virtual int getType() override { return type::onOffButton; }
+		virtual Point getSize() override;
+		virtual void setPositionX(int x) override;
+		virtual void setPositionY(int y) override;
+		virtual int getPositionX() override;
+		virtual int getPositionY() override;
+		virtual void additionalFunctonality() override;
+
 	};
 
 	///bref this is an horizontal group of buttons.

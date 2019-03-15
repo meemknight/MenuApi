@@ -424,6 +424,9 @@ namespace ma
 
 	int ButtonGroup::checkInput(sf::RenderWindow * window, bool mouseReleased)
 	{
+		additionalFunctonality();
+
+
 		int valueReturned = -2;
 		if (mouseReleased)
 		{
@@ -432,8 +435,11 @@ namespace ma
 				sf::IntRect rect(buttons[i].first->getPositionX(), buttons[i].first->getPositionY(), buttons[i].first->getSize().x, buttons[i].first->getSize().y);
 				if (rect.contains(sf::Mouse::getPosition(*window)))
 				{
+					buttons[i].first->additionalFunctonality();
+
 					if (buttons[i].first->actionType != nullptr)
 					{
+
 						if (buttons[i].first->actionType->getType() == type::function)
 						{
 							buttons[i].first->actionType->execute();
@@ -458,6 +464,109 @@ namespace ma
 	}
 
 #pragma endregion
+
+	void OnOffButton::draw(sf::RenderWindow * window)
+	{
+		if(backgroundSprite.getTexture() != nullptr)
+		{
+			window->draw(backgroundSprite);
+		}
+
+		if(data != nullptr)
+		{
+			if(*data == true)
+			{
+				if (onStateSprite.getTexture() != nullptr)
+				{
+					window->draw(onStateSprite);
+				}
+			}else
+			{
+				if (offStateSprite.getTexture() != nullptr)
+				{
+					window->draw(offStateSprite);
+				}
+			}
+		}
+	}
+
+	Point OnOffButton::getSize()
+	{
+
+		auto sizeB = sf::Vector2u();
+		if (backgroundSprite.getTexture() == nullptr)
+		{
+			sizeB = { 0,0 };
+		}
+		else
+		{
+			sizeB = backgroundSprite.getTexture()->getSize();
+		}
+
+		auto sizeO = sf::Vector2u();
+		if (onStateSprite.getTexture() == nullptr)
+		{
+			sizeO = { 0,0 };
+		}
+		else
+		{
+			sizeO = onStateSprite.getTexture()->getSize();
+		}
+
+		auto sizeF = sf::Vector2u();
+		if (offStateSprite.getTexture() == nullptr)
+		{
+			sizeF = { 0,0 };
+		}
+		else
+		{
+			sizeF = offStateSprite.getTexture()->getSize();
+		}
+
+
+
+		if (sizeB.x > sizeO.x) { sizeO.x = sizeB.x; }
+		if (sizeB.y > sizeO.y) { sizeO.y = sizeB.y; }
+
+		if (sizeF.x > sizeO.x) { sizeO.x = sizeF.x; }
+		if (sizeF.y > sizeO.y) { sizeO.y = sizeF.y; }
+
+
+
+		return Point({ (int)sizeO.x, (int)sizeO.y });
+	}
+
+	void OnOffButton::setPositionX(int x)
+	{
+		backgroundSprite.setPosition({(float)x, (float)backgroundSprite.getPosition().y});
+		onStateSprite.setPosition(   {(float)x, (float)onStateSprite.getPosition().y});
+		offStateSprite.setPosition(  {(float)x, (float)offStateSprite.getPosition().y});
+	}
+
+	void OnOffButton::setPositionY(int y)
+	{
+		backgroundSprite.setPosition({ (float)backgroundSprite.getPosition().x, (float)y });
+		onStateSprite.setPosition({ (float)onStateSprite.getPosition().x, (float)y });
+		offStateSprite.setPosition({ (float)offStateSprite.getPosition().x, (float)y });
+	}
+
+	int OnOffButton::getPositionX()
+	{
+		return backgroundSprite.getPosition().x;
+	}
+
+	int OnOffButton::getPositionY()
+	{
+		return backgroundSprite.getPosition().y;
+	}
+
+	void OnOffButton::additionalFunctonality()
+	{
+		if(data != nullptr)
+		{
+			*data = !(*data);
+		}
+	}
 
 }
 
