@@ -94,7 +94,7 @@ namespace ma
 		///you might want to set this to true.
 		bool checkForResize = 0;
 
-		void updateElementsPosition();
+		void updateElementsPosition(MenuHolder *h = nullptr);
 		void updateBackgrounsPosition();
 
 		int update(bool mouseReleased, bool escapeReleased = 0);

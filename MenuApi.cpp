@@ -19,7 +19,7 @@ namespace ma
 	{
 		if (mouseReleased)
 		{
-			sf::IntRect rect(getPositionX(), getPositionY(), getSize().x, getSize().y);	
+			sf::IntRect rect(getPositionX(), getPositionY(), getSize().x, getSize().y);
 			if (rect.contains(sf::Mouse::getPosition(*window)))
 			{
 				additionalFunctonality();
@@ -35,7 +35,8 @@ namespace ma
 					{
 						return 0;
 					}
-				}else
+				}
+				else
 				{
 					return -1;
 				}
@@ -47,12 +48,14 @@ namespace ma
 
 #pragma endregion
 
-	void Menu::updateElementsPosition()
-	{
-		MenuHolder *holder;
-		holder = mainMenu;
+	void Menu::updateElementsPosition(MenuHolder *h)
+	{ //todo
+		if (h == nullptr)
+		{
+			h = mainMenu;
+		}
 
-		holder->updateElementsPosition();
+		h->updateElementsPosition();
 	}
 
 	void Menu::updateBackgrounsPosition()
@@ -63,7 +66,7 @@ namespace ma
 			int sparey = window->getSize().y - background.getTexture()->getSize().y;
 			sparex /= 2;
 			sparey /= 2;
-			
+
 			backgroundPositionx = sparex;
 			backgroundPositiony = sparey;
 		}
@@ -74,40 +77,42 @@ namespace ma
 		MenuHolder *holder;
 		holder = mainMenu;
 
-		if(checkForResize)
-		{
-			updateElementsPosition();
-			updateBackgrounsPosition();
-		}
-
 		if (stack.size() != 0)
 		{
 			for (int i = 0; i < stack.size(); i++)
 			{
-					
+
 
 				if (holder->elements[stack[i].first]->actionType != nullptr && holder->elements[stack[i].first]->actionType->getType() == type::menuHolder)
 				{
 					holder = (MenuHolder*)holder->elements[stack[i].first]->actionType;
-				}else
-				if (holder->elements[stack[i].first]->getType() == type::buttonGroup)
-				{
-					auto temp = ((ButtonGroup*)holder->elements[stack[i].first])->buttons[stack[i].second].first;
-					if(temp->actionType->getType() == type::menuHolder)
-					{
-						holder = (MenuHolder*)temp->actionType;
-					}
 				}
+				else
+					if (holder->elements[stack[i].first]->getType() == type::buttonGroup)
+					{
+						auto temp = ((ButtonGroup*)holder->elements[stack[i].first])->buttons[stack[i].second].first;
+						if (temp->actionType->getType() == type::menuHolder)
+						{
+							holder = (MenuHolder*)temp->actionType;
+						}
+					}
 			}
 
 		}
 
-		if(background.getTexture() != nullptr)
+		if (checkForResize)
+		{
+			updateElementsPosition(holder);
+			updateBackgrounsPosition();
+		}
+
+
+		if (background.getTexture() != nullptr)
 		{
 			background.setPosition(backgroundPositionx, backgroundPositiony);
 			window->draw(background);
 		}
-		
+
 
 
 
@@ -127,10 +132,10 @@ namespace ma
 
 		if (input != -1)
 		{
-			stack.push_back({ input , secondary});
+			stack.push_back({ input , secondary });
 		}
-	
-		if(escapeReleased)
+
+		if (escapeReleased)
 		{
 			if (stack.size() == 0)
 			{
@@ -140,15 +145,15 @@ namespace ma
 			stack.pop_back();
 		}
 
-		if(backButton != nullptr)
+		if (backButton != nullptr)
 		{
 			//todo make it set it's position
 			backButton->setPositionX(backgroundPositionx + backButtonPaddingx);
 			backButton->setPositionY(backgroundPositiony + backButtonPaddingy);
 			backButton->draw(window);
-			if(backButton->checkInput(window, mouseReleased) != -2)
+			if (backButton->checkInput(window, mouseReleased) != -2)
 			{
-				if(stack.size()==0)
+				if (stack.size() == 0)
 				{
 					return 0;
 				}
@@ -166,7 +171,7 @@ namespace ma
 
 #pragma region MenuHolder
 
-	
+
 
 	void MenuHolder::appendElement(MenuElement * e)
 	{
@@ -178,22 +183,23 @@ namespace ma
 	{
 		int spareSpace = menu->window->getSize().y;
 
-		for (int i = elements.size()-1; i >= 0; i--)
+		for (int i = elements.size() - 1; i >= 0; i--)
 		{
 			spareSpace -= elements[i]->getSize().y;
 		}
 
 		int padding;
-		if(spareSpace > 0)
+		if (spareSpace > 0)
 		{
-			 padding = spareSpace / (elements.size() + 1);
-		}else
+			padding = spareSpace / (elements.size() + 1);
+		}
+		else
 		{
 			padding = 0;
 		}
 
 		int pos = 0;
-		for(int i = 0; i < elements.size(); i++)
+		for (int i = 0; i < elements.size(); i++)
 		{
 			pos += padding;
 			elements[i]->setPositionY(pos);
@@ -211,14 +217,14 @@ namespace ma
 		window->draw(s);
 		textContent.setPosition(s.getPosition());
 		auto startingPos = s.getPosition();
-		int spareX = getSize().x;	
+		int spareX = getSize().x;
 		int spareY = getSize().y;
 
 		spareY -= textContent.getLocalBounds().height;
 		spareY /= 2;
 		startingPos.y += spareY;
-		
-		spareX -= textContent.getLocalBounds().width ;
+
+		spareX -= textContent.getLocalBounds().width;
 		spareX /= 2;
 		startingPos.x += spareX;
 
@@ -229,12 +235,12 @@ namespace ma
 
 	Point TextButton::getSize()
 	{
-		if(s.getTexture() == nullptr)
+		if (s.getTexture() == nullptr)
 		{
 			return { 0,0 };
 		}
 		auto size = s.getTexture()->getSize();
-		return Point({(int)size.x, (int)size.y});
+		return Point({ (int)size.x, (int)size.y });
 	}
 
 	void TextButton::setPositionX(int x)
@@ -280,10 +286,11 @@ namespace ma
 	Point IconButton::getSize()
 	{
 		auto sizeF = sf::Vector2u();
-		if(foregroundSprite.getTexture() == nullptr)
+		if (foregroundSprite.getTexture() == nullptr)
 		{
 			sizeF = { 0,0 };
-		}else
+		}
+		else
 		{
 			sizeF = foregroundSprite.getTexture()->getSize();
 		}
@@ -297,9 +304,9 @@ namespace ma
 		{
 			sizeB = backgroundSprite.getTexture()->getSize();
 		}
-		
-	
-		
+
+
+
 		if (sizeB.x > sizeF.x) { sizeF.x = sizeB.x; }
 		if (sizeB.y > sizeF.y) { sizeF.y = sizeB.y; }
 
@@ -334,7 +341,7 @@ namespace ma
 
 	void ButtonGroup::appendElement(MenuElement * element)
 	{
-		buttons.push_back({ element, 0});
+		buttons.push_back({ element, 0 });
 		updateElementsPosition();
 	}
 
@@ -342,7 +349,7 @@ namespace ma
 	{
 		int spareSpace = menu->window->getSize().x;
 
-		for(auto &i: buttons)
+		for (auto &i : buttons)
 		{
 			spareSpace -= i.first->getSize().x;
 		}
@@ -353,14 +360,14 @@ namespace ma
 
 		buttons[0].second = spareSpace;
 		int currentPos = buttons[0].first->getSize().x + spareSpace * 2;
-		for(int i=1; i< buttons.size(); i++)
+		for (int i = 1; i < buttons.size(); i++)
 		{
 			buttons[i].second = currentPos;
 			currentPos += buttons[i].first->getSize().x;
 			currentPos += spareSpace;
 
 		}
-		
+
 	}
 
 	void ButtonGroup::draw(sf::RenderWindow * window)
@@ -374,9 +381,9 @@ namespace ma
 	Point ButtonGroup::getSize()
 	{
 		Point size = { 0,0 };
-		for(auto &i: buttons)
+		for (auto &i : buttons)
 		{
-			if(i.first->getSize().y > size.y)
+			if (i.first->getSize().y > size.y)
 			{
 				size.y = i.first->getSize().y;
 			}
@@ -405,7 +412,7 @@ namespace ma
 	int ButtonGroup::getPositionX()
 	{
 		//todo make other checks like this
-		if(buttons.size() == 0)
+		if (buttons.size() == 0)
 		{
 			throw;
 		}
@@ -431,7 +438,7 @@ namespace ma
 		int valueReturned = -2;
 		if (mouseReleased)
 		{
-			for(int i=0; i< buttons.size(); i++)
+			for (int i = 0; i < buttons.size(); i++)
 			{
 				sf::IntRect rect(buttons[i].first->getPositionX(), buttons[i].first->getPositionY(), buttons[i].first->getSize().x, buttons[i].first->getSize().y);
 				if (rect.contains(sf::Mouse::getPosition(*window)))
@@ -444,7 +451,7 @@ namespace ma
 						if (buttons[i].first->actionType->getType() == type::function)
 						{
 							buttons[i].first->actionType->execute();
-							if(valueReturned < 0)
+							if (valueReturned < 0)
 							{
 								valueReturned = -1;
 							}
@@ -458,7 +465,7 @@ namespace ma
 
 				}
 			}
-			
+
 		}
 
 		return valueReturned;
@@ -468,20 +475,21 @@ namespace ma
 
 	void OnOffButton::draw(sf::RenderWindow * window)
 	{
-		if(backgroundSprite.getTexture() != nullptr)
+		if (backgroundSprite.getTexture() != nullptr)
 		{
 			window->draw(backgroundSprite);
 		}
 
-		if(data != nullptr)
+		if (data != nullptr)
 		{
-			if(*data == true)
+			if (*data == true)
 			{
 				if (onStateSprite.getTexture() != nullptr)
 				{
 					window->draw(onStateSprite);
 				}
-			}else
+			}
+			else
 			{
 				if (offStateSprite.getTexture() != nullptr)
 				{
@@ -539,9 +547,9 @@ namespace ma
 
 	void OnOffButton::setPositionX(int x)
 	{
-		backgroundSprite.setPosition({(float)x, (float)backgroundSprite.getPosition().y});
-		onStateSprite.setPosition(   {(float)x, (float)onStateSprite.getPosition().y});
-		offStateSprite.setPosition(  {(float)x, (float)offStateSprite.getPosition().y});
+		backgroundSprite.setPosition({ (float)x, (float)backgroundSprite.getPosition().y });
+		onStateSprite.setPosition({ (float)x, (float)onStateSprite.getPosition().y });
+		offStateSprite.setPosition({ (float)x, (float)offStateSprite.getPosition().y });
 	}
 
 	void OnOffButton::setPositionY(int y)
@@ -563,7 +571,7 @@ namespace ma
 
 	void OnOffButton::additionalFunctonality()
 	{
-		if(data != nullptr)
+		if (data != nullptr)
 		{
 			*data = !(*data);
 		}
