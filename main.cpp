@@ -59,11 +59,13 @@ int main()
 	buttonGroup.appendElement(new ma::IconButton(&smallButtonTexture, &arrowTexture, 0));
 	buttonGroup.appendElement(new ma::TextButton(&smallButtonTexture, font, &menu3, ". . .", 30));
 	bool onOffData = 0;
+	bool onOffData2 = 0;
 	buttonGroup.appendElement(new ma::OnOffButton(&smallButtonTexture, &arrowTexture, nullptr, &onOffData));
 
 	mh.appendElement(new ma::TextButton(&textButton, font, new ma::Function([] {std::cout << "lol\n"; }), "Menu API", 30));
 	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "this is like a big text\nand it leads to more", 34));
 	mh.appendElement(&buttonGroup);
+	mh.appendElement(new ma::OnOffButton(&smallButtonTexture, &arrowTexture, nullptr, &onOffData2));
 	m.mainMenu = &mh;
 	mh.appendElement(new ma::TextButton(&texture, font, 0, "b long text................................................"));
 

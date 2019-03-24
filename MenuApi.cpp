@@ -22,6 +22,8 @@ namespace ma
 			sf::IntRect rect(getPositionX(), getPositionY(), getSize().x, getSize().y);	
 			if (rect.contains(sf::Mouse::getPosition(*window)))
 			{
+				additionalFunctonality();
+
 				if (actionType != nullptr)
 				{
 					if (actionType->getType() == type::function)
@@ -425,7 +427,6 @@ namespace ma
 	int ButtonGroup::checkInput(sf::RenderWindow * window, bool mouseReleased)
 	{
 		additionalFunctonality();
-
 
 		int valueReturned = -2;
 		if (mouseReleased)

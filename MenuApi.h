@@ -43,6 +43,25 @@ namespace ma
 		virtual void execute() = 0;
 	};
 
+	class MenuElement
+	{
+	public:
+		MenuElement() {};
+
+		virtual void draw(sf::RenderWindow *window) = 0;
+		virtual int checkInput(sf::RenderWindow *window, bool mouseReleased);
+		///this function below will be called on click by the function above ^
+		virtual void additionalFunctonality() {}
+		virtual int getType() = 0;
+		virtual Point getSize() = 0;
+		virtual void setPositionX(int x) = 0;
+		virtual void setPositionY(int y) = 0;
+		virtual int getPositionX() = 0;
+		virtual int getPositionY() = 0;
+		//Menu *context;
+		ButtonAccesseble *actionType = 0;
+	};
+
 	///bref this is the main menu class in where you will be storing your menu group.
 	///It needs to have a pointer to a MenuHolder in where you will put your buttons.
 	class Menu
@@ -82,25 +101,6 @@ namespace ma
 		void resetStack() { stack.clear(); }
 	};
 
-
-	class MenuElement
-	{
-	public:
-		MenuElement() {};
-
-		virtual void draw(sf::RenderWindow *window) = 0;
-		virtual int checkInput(sf::RenderWindow *window, bool mouseReleased);
-		///this function below will be called on click if the function above ^ is not overwritten
-		virtual void additionalFunctonality() {}
-		virtual int getType() = 0;
-		virtual Point getSize() = 0;
-		virtual void setPositionX(int x) = 0;
-		virtual void setPositionY(int y) = 0;
-		virtual int getPositionX() = 0;
-		virtual int getPositionY() = 0;
-		//Menu *context;
-		ButtonAccesseble *actionType = 0;
-	};
 
 
 	///bref this class can hold other menu elements inside it.
