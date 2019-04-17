@@ -37,6 +37,7 @@ namespace ma
 		onOffButton,
 		plainText,
 		plainSprite,
+		buttonChoiceGroup,
 	};
 
 	class ButtonAccesseble
@@ -137,21 +138,22 @@ namespace ma
 	public:
 
 		///this is -1 if nothing is chosen.
-		int *index;
+		int *index = nullptr;
 
 		ButtonChoiceGroup() {};
 		ButtonChoiceGroup(Menu *menu):menu(menu) {};
 		
-		sf::Sprite chosenBackground;
+		///this two should have the same size but it still works
+		sf::Sprite chosenBackground;		
 		sf::Sprite notChosenBackground;
 
-		//void appendElement(MenuElement *element);
+		void appendElement(MenuElement *element);
 		void updateElementsPosition();
 
 		Menu *menu;
 
 		virtual void draw(sf::RenderWindow *window) override;
-		virtual int getType() override { return type::buttonGroup; }
+		virtual int getType() override { return type::buttonChoiceGroup; }
 		virtual Point getSize() override;
 		virtual void setPositionX(int x) override;
 		virtual void setPositionY(int y) override;
@@ -338,7 +340,7 @@ namespace ma
 		sf::Sprite onStateSprite;
 		sf::Sprite offStateSprite;
 
-		bool *data;
+		bool *data = nullptr;
 
 		virtual void draw(sf::RenderWindow *window) override;
 		virtual int getType() override { return type::onOffButton; }
@@ -366,7 +368,7 @@ namespace ma
 		void appendElement(MenuElement *element);
 		void updateElementsPosition();
 
-		Menu *menu;
+		Menu *menu = nullptr;
 
 		virtual void draw(sf::RenderWindow *window) override;
 		virtual int getType() override { return type::buttonGroup; }

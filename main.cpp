@@ -65,7 +65,21 @@ int main()
 	mh.appendElement(new ma::TextButton(&textButton, font, new ma::Function([] {std::cout << "lol\n"; }), "Menu API", 30));
 	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "this is like a big text\nand it leads to more", 34));
 	mh.appendElement(&buttonGroup);
-	mh.appendElement(new ma::PlainSprite(&smallButtonTexture, nullptr));
+
+	auto choice = new ma::ButtonChoiceGroup(&m);
+	choice->notChosenBackground.setTexture(smallButtonTexture);
+	choice->chosenBackground.setTexture(smallButtonTexture);
+	choice->chosenBackground.setColor(sf::Color::Blue);
+
+	choice->index = new int(1);
+
+	choice->appendElement(new ma::PlainText(font, nullptr, "lol"));
+	choice->appendElement(new ma::PlainText(font, nullptr, "2"));
+	choice->appendElement(new ma::PlainText(font, nullptr, "3"));
+	choice->appendElement(new ma::PlainText(font, nullptr, "4"));
+
+	mh.appendElement(choice);
+	
 	m.mainMenu = &mh;
 	mh.appendElement(new ma::TextButton(&texture, font, 0, "b long text................................................"));
 
