@@ -65,7 +65,7 @@ int main()
 	mh.appendElement(new ma::TextButton(&textButton, font, new ma::Function([] {std::cout << "lol\n"; }), "Menu API", 30));
 	mh.appendElement(new ma::TextButton(&texture, font, &menu2, "this is like a big text\nand it leads to more", 34));
 	mh.appendElement(&buttonGroup);
-	mh.appendElement(new ma::OnOffButton(&smallButtonTexture, &arrowTexture, nullptr, &onOffData2));
+	mh.appendElement(new ma::PlainSprite(&smallButtonTexture, nullptr));
 	m.mainMenu = &mh;
 	mh.appendElement(new ma::TextButton(&texture, font, 0, "b long text................................................"));
 

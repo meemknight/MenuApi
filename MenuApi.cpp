@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////
 //MenuApi.cpp
 //(c) Luta Vlad - 2019
-// this library is under MIT license, do not remove this notice
+//this library is under MIT license, do not remove this notice
 //https://github.com/meemknight/MenuApi
 //////////////////////////////////////////////////////////////////
 #include "MenuApi.h"
@@ -230,7 +230,6 @@ namespace ma
 
 		textContent.setPosition(startingPos);
 		window->draw(textContent);
-
 	}
 
 	Point TextButton::getSize()
@@ -575,6 +574,67 @@ namespace ma
 		{
 			*data = !(*data);
 		}
+	}
+
+
+	void PlainText::draw(sf::RenderWindow * window)
+	{
+		window->draw(textContent);
+	}
+
+	Point PlainText::getSize()
+	{
+		return Point{static_cast<int>(textContent.getLocalBounds().width), static_cast<int>(textContent.getLocalBounds().height)};
+	}
+
+	void PlainText::setPositionX(int x)
+	{
+		textContent.setPosition(x, textContent.getPosition().y);
+	}
+
+	void PlainText::setPositionY(int y)
+	{
+		textContent.setPosition(textContent.getPosition().x, y);
+	}
+
+	int PlainText::getPositionX()
+	{
+		return textContent.getPosition().x;
+	}
+
+	int PlainText::getPositionY()
+	{
+		return textContent.getPosition().y;
+	}
+
+	void PlainSprite::draw(sf::RenderWindow * window)
+	{
+		window->draw(s);
+	}
+
+	Point PlainSprite::getSize()
+	{
+		return Point(s.getLocalBounds().width, s.getLocalBounds().height);
+	}
+
+	void PlainSprite::setPositionX(int x)
+	{
+		s.setPosition(x, s.getPosition().y);
+	}
+
+	void PlainSprite::setPositionY(int y)
+	{
+		s.setPosition(s.getPosition().x, y);
+	}
+
+	int PlainSprite::getPositionX()
+	{
+		return s.getPosition().x;
+	}
+
+	int PlainSprite::getPositionY()
+	{
+		return s.getPosition().y;
 	}
 
 }
