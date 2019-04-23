@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <utility>
+#include <functional>
 
 namespace ma
 {
@@ -234,7 +235,7 @@ namespace ma
 		Function() {};
 		Function(void(*functionPointer)()) :functionPointer(functionPointer) {};
 
-		void(*functionPointer)() = nullptr;
+		std::function<void()> functionPointer;
 
 		virtual int getType() override{ return type::function; };
 		virtual void execute() override;
