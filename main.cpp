@@ -6,6 +6,14 @@
 #include "MenuApi.h"
 #include <iostream>
 
+struct Functor
+{
+	int element = 0;
+	void operator()()
+	{
+		std::cout << element << "\n";
+	}
+};
 
 int main()
 {
@@ -73,7 +81,7 @@ int main()
 
 	choice->index = new int(1);
 
-	choice->appendElement(new ma::PlainText(font, nullptr, "lol"));
+	choice->appendElement(new ma::PlainText(font, new ma::Function(Functor{ 4 }) , "lol"));
 	choice->appendElement(new ma::PlainText(font, nullptr, "2"));
 	choice->appendElement(new ma::PlainText(font, nullptr, "3"));
 	choice->appendElement(new ma::PlainText(font, nullptr, "4"));

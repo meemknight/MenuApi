@@ -233,7 +233,7 @@ namespace ma
 	{
 	public:
 		Function() {};
-		Function(void(*functionPointer)()) :functionPointer(functionPointer) {};
+		Function(std::function<void()> functionPointer) :functionPointer(functionPointer) {};
 
 		std::function<void()> functionPointer;
 
