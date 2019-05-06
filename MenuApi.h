@@ -1,5 +1,6 @@
 //////////////////////////////////////////////////////////////////
-//MenuApi.h
+//						MenuApi version 1.0
+//MenuApi.h 
 //(c) Luta Vlad - 2019
 //this library is under MIT license, do not remove this notice
 //https://github.com/meemknight/MenuApi
@@ -69,6 +70,7 @@ namespace ma
 		ButtonAccesseble *actionType = 0;
 	};
 
+	///this class is just a button only made out of some text
 	class PlainText : public MenuElement
 	{
 	protected:
@@ -100,6 +102,7 @@ namespace ma
 		virtual int getPositionY() override;
 	};
 
+	///this class is just a button only made out of a sf::sprite. You have tu supply a texture to it
 	class PlainSprite : public MenuElement
 	{
 	protected:
@@ -129,7 +132,8 @@ namespace ma
 	};
 
 
-	///bref this class holds some buttons and the user cand choose one
+	///bref this class holds some buttons and the user cand have only one of them
+	///chosen at a time.
 	class ButtonChoiceGroup : public MenuElement
 	{
 	protected:
@@ -167,7 +171,7 @@ namespace ma
 
 
 	///bref this is the main menu class in where you will be storing your menu group.
-	///It needs to have a pointer to a MenuHolder in where you will put your buttons.
+	///!!!It needs to have a pointer to a MenuHolder in where you will put your buttons.!!!
 	class Menu
 	{
 	public:
@@ -178,8 +182,8 @@ namespace ma
 		std::vector<std::pair<int, int>> stack;
 		MenuHolder *mainMenu = 0;
 		MenuElement *backButton = 0;
-
-		///i couldn't figure out how to set this programatically so i leave this up to your personal choice.
+		
+		///I couldn't figure out how to set this programatically so i leave this up to your personal choice.
 		///this variables set the padding of the back button starting from the backgrouns position's left upper corner.
 		int backButtonPaddingx = 160;
 		int backButtonPaddingy = 80;
@@ -193,10 +197,12 @@ namespace ma
 		int backgroundPositiony = 0;
 
 		///this variable will determin if the api should or should not
-		///take into consideration the resize of the screen.
+		///take into consideration the resize of the screen and resize it's elements per frame.
 		///if you do something like window.setView(sf::View({ 0.f, 0.f, (float)size.x, (float)size.y }));
-		///you might want to set this to true.
-		bool checkForResize = 0;
+		///you might want to set this to true for convenience.
+		///If you don't want to do so for performance reasons, you have to update it manually when the window resizes
+		///see updateBackgrounsPosition
+		bool checkForResize = true;
 
 		void updateElementsPosition(MenuHolder *h = nullptr);
 		void updateBackgrounsPosition();
@@ -208,8 +214,8 @@ namespace ma
 
 
 	///bref this class can hold other menu elements inside it.
-	///It must have a refference to it's Menu since it needs to know things like the size of
-	///the window.
+	///!!!It MUST have a refference to it's Menu since it needs to know things like the size of
+	///the window.!!!
 	class MenuHolder : public  ButtonAccesseble
 	{
 	protected:
@@ -228,7 +234,8 @@ namespace ma
 		friend Menu;
 	};
 
-	///bref this is a function that is accessed by a clicked button
+	///bref this is a function that is accessed by a clicked button.
+	///all it does is to wrap the std::function type
 	class Function : public  ButtonAccesseble
 	{
 	public:
@@ -241,7 +248,7 @@ namespace ma
 		virtual void execute() override;
 	};
 
-	///bref this is a button with some text in it
+	///bref this is a button with some text in it and a sprite with a texture
 	class TextButton : public virtual MenuElement
 	{
 	protected:
@@ -279,7 +286,8 @@ namespace ma
 		virtual int getPositionY() override;
 	};
 
-	///bref this is a button with a sprite in it
+	///bref This is a button with a sprite in it and a background sprite,
+	///hence have tu supply 2 textures to it. It won't error out if you don't.
 	class IconButton : public virtual MenuElement
 	{
 	public:
@@ -313,6 +321,7 @@ namespace ma
 	
 	};
 
+	///bref the OnOffButton can be on or off and writes to a boll variable that you supply the adress of
 	class OnOffButton : public virtual MenuElement
 	{
 	public:
@@ -354,7 +363,8 @@ namespace ma
 
 	};
 
-	///bref this is an horizontal group of buttons.
+	///bref This is an horizontal group of buttons.
+	///You need something like this because the buttons are placed vertical by default in the menu.
 	///I reccomand using it with small buttons.
 	class ButtonGroup : public MenuElement
 	{

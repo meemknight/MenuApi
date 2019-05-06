@@ -1,4 +1,5 @@
 //////////////////////////////////////////////////////////////////
+//						MenuApi version 1.0
 //MenuApi.cpp
 //(c) Luta Vlad - 2019
 //this library is under MIT license, do not remove this notice
@@ -49,7 +50,9 @@ namespace ma
 #pragma endregion
 
 	void Menu::updateElementsPosition(MenuHolder *h)
-	{ //todo
+	{ 
+		updateBackgrounsPosition();
+
 		if (h == nullptr)
 		{
 			h = mainMenu;
