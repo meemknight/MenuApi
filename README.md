@@ -15,3 +15,5 @@ to another menu group.
 The second one includes components that can be desplayed in a menu like buttons.
 
 Licensed under [MTI License](LICENSE).
+
+![](https://github.com/meemknight/photos/blob/master/Ma1.png)
